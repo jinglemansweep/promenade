@@ -2,6 +2,8 @@
 
 A powerful, customizable CLI dashboard for Prometheus metrics built with Python and Textual.
 
+![Promenade Dashboard](screenshot.svg)
+
 ## Features
 
 - 📊 **Grid-based Layout**: Flexible grid system for organizing widgets
