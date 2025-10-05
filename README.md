@@ -22,19 +22,28 @@ A powerful, customizable CLI dashboard for Prometheus metrics built with Python 
 ### Using UV (Recommended)
 
 ```bash
-# Create virtual environment
-uv venv .venv
+# Install dependencies
+uv sync
 
-# Activate virtual environment
+# Activate virtual environment (if needed)
 source .venv/bin/activate  # On Linux/macOS
 # or
 .venv\Scripts\activate  # On Windows
-
-# Install the package
-uv pip install -e .
 ```
 
-### Using pip
+### Development Installation
+
+For development work:
+
+```bash
+# Install dependencies including dev tools
+uv sync
+
+# Install pre-commit hooks
+uv run pre-commit install
+```
+
+### Alternative: Using pip
 
 ```bash
 # Create virtual environment
@@ -42,14 +51,7 @@ python -m venv .venv
 source .venv/bin/activate
 
 # Install the package
-pip install -e .
-```
-
-### Development Installation
-
-```bash
-# Install with development dependencies
-uv pip install -e ".[dev]"
+pip install -e ".[dev]"
 
 # Set up pre-commit hooks
 pre-commit install

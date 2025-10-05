@@ -20,9 +20,7 @@ class BorderStyle(str, Enum):
 class ConditionalFormat(BaseModel):
     """Conditional formatting rules for widgets."""
 
-    condition: str = Field(
-        ..., description="Python expression evaluated with 'value' variable"
-    )
+    condition: str = Field(..., description="Python expression evaluated with 'value' variable")
     border_color: str | None = Field(
         None, description="Border color when condition is true (e.g., 'red', '#ff0000')"
     )
@@ -48,16 +46,12 @@ class WidgetConfig(BaseModel):
 
     label: str | None = Field(None, description="Optional label for the widget")
     query: str = Field(..., description="Prometheus query to execute")
-    format_string: str = Field(
-        "{value}", description="Format string for displaying the value"
-    )
+    format_string: str = Field("{value}", description="Format string for displaying the value")
     row: int = Field(..., description="Row position in grid (0-indexed)", ge=0)
     column: int = Field(..., description="Column position in grid (0-indexed)", ge=0)
     row_span: int = Field(1, description="Number of rows to span", ge=1)
     column_span: int = Field(1, description="Number of columns to span", ge=1)
-    border_style: BorderStyle = Field(
-        BorderStyle.SOLID, description="Border style for the widget"
-    )
+    border_style: BorderStyle = Field(BorderStyle.SOLID, description="Border style for the widget")
     conditional_formats: list[ConditionalFormat] = Field(
         default_factory=list, description="List of conditional formatting rules"
     )
@@ -67,9 +61,7 @@ class DashboardConfig(BaseModel):
     """Complete dashboard configuration."""
 
     title: str = Field("Prometheus Dashboard", description="Dashboard title")
-    refresh_interval: int = Field(
-        5, description="Dashboard refresh interval in seconds", ge=1
-    )
+    refresh_interval: int = Field(5, description="Dashboard refresh interval in seconds", ge=1)
     grid_rows: int = Field(..., description="Number of rows in the grid", ge=1)
     grid_columns: int = Field(..., description="Number of columns in the grid", ge=1)
     widgets: list[WidgetConfig] = Field(
