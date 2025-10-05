@@ -56,7 +56,7 @@ class PrometheusDashboard(App):  # type: ignore[misc]
         self.config = config
         self.prometheus_client = prometheus_client
         self.title = config.title
-        self.sub_title = "Prometheus Dashboard"
+        self.sub_title = "Promenade"
 
     def compose(self) -> ComposeResult:
         """Compose the app's widgets."""
