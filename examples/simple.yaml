@@ -1,0 +1,132 @@
+# Simple Prometheus Dashboard Example
+# Minimal configuration with basic metrics
+
+title: "Simple Dashboard"
+refresh_interval: 10  # Refresh all metrics every 10 seconds
+grid_rows: 6
+grid_columns: 6
+
+widgets:
+
+  # ROW 0
+
+  - label: "UDM SE"
+    query: probe_success{instance="10.1.1.1"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 0
+    column: 0
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  - label: "Switch Rack"
+    query: probe_success{instance="10.1.1.11"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 0
+    column: 1
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  - label: "Switch Lounge"
+    query: probe_success{instance="10.1.1.12"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 0
+    column: 2
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  # ROW 1
+
+  - label: "DS920+"
+    query: probe_success{instance="ds920p.adm.ptre.es"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 1
+    column: 0
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  - label: "PVM1"
+    query: probe_success{instance="pvm1.adm.ptre.es"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 1
+    column: 1
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  - label: "PVM2"
+    query: probe_success{instance="pvm2.adm.ptre.es"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 1
+    column: 2
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  - label: "PVM3"
+    query: probe_success{instance="pvm3.adm.ptre.es"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 1
+    column: 3
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  - label: "Jetson"
+    query: probe_success{instance="jetson.adm.ptre.es"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 1
+    column: 4
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
+
+  # ROW 2
+
+  - label: "Back Door"
+    query: homeassistant_binary_sensor_state{entity="binary_sensor.back_door_contact_sensor_contact"}
+    format_string: "'OPEN' if value else 'CLOSED'"
+    row: 2
+    column: 0
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "green"
+      - condition: "value == 0"
+        border_color: "red"
