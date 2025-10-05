@@ -238,6 +238,21 @@ widgets:
     format_string: "{value:.2f}"
     sparkline_summary: mean
     row: 4
+    column: 4
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value > 1"
+        border_color: "$error"
+      - condition: "value <= 1"
+        border_color: "$success"
+
+  - label: "DW1 RAM Free"
+    type: sparkline
+    query: node_memory_MemFree_bytes{instance="dw1.svc.ptre.es:9100"} / 1e+9
+    format_string: "{value:.2f}"
+    sparkline_summary: mean
+    row: 4
     column: 5
     row_span: 1
     column_span: 1
