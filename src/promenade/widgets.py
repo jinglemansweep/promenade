@@ -16,7 +16,7 @@ class MetricWidget(Container):  # type: ignore[misc]
     MetricWidget {
         border: solid;
         height: auto;
-        padding: 1;
+        padding: 0 1;
     }
 
     MetricWidget > .metric-label {
