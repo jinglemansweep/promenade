@@ -50,10 +50,9 @@ widgets:
         border_color: "$error"
 
   - label: "WAN Download"
-    type: sparkline
+    type: digits
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_download"}
-    format_string: "{value:.2f} Mbit/s"
-    sparkline_summary: mean
+    format_string: "{value:.0f}Mbs"
     row: 0
     column: 3
     row_span: 1
@@ -65,10 +64,9 @@ widgets:
         border_color: "$error"
 
   - label: "WAN Upload"
-    type: sparkline
+    type: digits
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_upload"}
-    format_string: "{value:.2f} Mbit/s"
-    sparkline_summary: mean
+    format_string: "{value:.0f}Mbs"
     row: 0
     column: 4
     row_span: 1
@@ -80,10 +78,9 @@ widgets:
         border_color: "$error"
 
   - label: "NAS Volume"
-    type: progress
+    type: digits
     query: homeassistant_sensor_unit_percent{entity="sensor.ds920plus_volume_used"}
-    format_string: "{value:.1f}%"
-    show_percentage: true
+    format_string: "{value:.0f}%"
     row: 0
     column: 5
     row_span: 1

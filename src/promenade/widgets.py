@@ -16,7 +16,7 @@ class MetricWidget(Container):  # type: ignore[misc]
 
     DEFAULT_CSS = """
     MetricWidget {
-        border: heavy;
+        border: heavy $secondary;
         height: auto;
         padding: 0 1;
     }
@@ -27,6 +27,7 @@ class MetricWidget(Container):  # type: ignore[misc]
 
     MetricWidget > .metric-value {
         content-align: center middle;
+        text-align: center;
         height: 1fr;
     }
 
