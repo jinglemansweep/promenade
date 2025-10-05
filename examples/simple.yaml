@@ -19,9 +19,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   - label: "Switch Rack"
     query: probe_success{instance="10.1.1.11"}
@@ -32,9 +32,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   - label: "Switch Lounge"
     query: probe_success{instance="10.1.1.12"}
@@ -45,9 +45,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   # ROW 1
 
@@ -60,9 +60,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   - label: "PVM1"
     query: probe_success{instance="pvm1.adm.ptre.es"}
@@ -73,9 +73,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   - label: "PVM2"
     query: probe_success{instance="pvm2.adm.ptre.es"}
@@ -86,9 +86,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   - label: "PVM3"
     query: probe_success{instance="pvm3.adm.ptre.es"}
@@ -99,9 +99,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   - label: "Jetson"
     query: probe_success{instance="jetson.adm.ptre.es"}
@@ -112,9 +112,9 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
 
   # ROW 2
 
@@ -127,6 +127,68 @@ widgets:
     column_span: 1
     conditional_formats:
       - condition: "value == 1"
-        border_color: "green"
+        border_color: "$success"
       - condition: "value == 0"
-        border_color: "red"
+        border_color: "$error"
+
+  # ROW 3
+
+  - label: "WAN Download"
+    type: sparkline
+    query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_download"}
+    format_string: "{value:.2f} Mbit/s"
+    sparkline_summary: mean
+    row: 3
+    column: 0
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value >= 500"
+        border_color: "$success"
+      - condition: "value < 500"
+        border_color: "$error"
+
+  - label: "WAN Upload"
+    type: sparkline
+    query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_upload"}
+    format_string: "{value:.2f} Mbit/s"
+    sparkline_summary: mean
+    row: 3
+    column: 1
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value >= 500"
+        border_color: "$success"
+      - condition: "value < 500"
+        border_color: "$error"
+
+  - label: "NAS Volume"
+    type: progress
+    query: homeassistant_sensor_unit_percent{entity="sensor.ds920plus_volume_used"}
+    format_string: "{value:.1f}%"
+    show_percentage: true
+    row: 3
+    column: 2
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value <= 80"
+        border_color: "$success"
+      - condition: "value > 80"
+        border_color: "$error"
+
+  - label: "DW1 Load Avg"
+    type: sparkline
+    query: node_load1{instance="dw1.svc.ptre.es:9100"}
+    format_string: "{value:.2f}"
+    sparkline_summary: mean
+    row: 3
+    column: 3
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value > 1"
+        border_color: "$error"
+      - condition: "value <= 1"
+        border_color: "$success"

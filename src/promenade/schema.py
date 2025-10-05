@@ -17,6 +17,15 @@ class BorderStyle(str, Enum):
     ROUNDED = "rounded"
 
 
+class WidgetType(str, Enum):
+    """Available widget types."""
+
+    TEXT = "text"
+    DIGITS = "digits"
+    SPARKLINE = "sparkline"
+    PROGRESS = "progress"
+
+
 class ConditionalFormat(BaseModel):
     """Conditional formatting rules for widgets."""
 
@@ -44,6 +53,9 @@ class ConditionalFormat(BaseModel):
 class WidgetConfig(BaseModel):
     """Configuration for a single dashboard widget."""
 
+    type: WidgetType = Field(
+        WidgetType.TEXT, description="Widget type (text, digits, sparkline, progress)"
+    )
     label: str | None = Field(None, description="Optional label for the widget")
     query: str = Field(..., description="Prometheus query to execute")
     format_string: str = Field("{value}", description="Format string for displaying the value")
@@ -54,6 +66,23 @@ class WidgetConfig(BaseModel):
     border_style: BorderStyle = Field(BorderStyle.SOLID, description="Border style for the widget")
     conditional_formats: list[ConditionalFormat] = Field(
         default_factory=list, description="List of conditional formatting rules"
+    )
+
+    # Progress bar specific options
+    progress_total: float | None = Field(
+        None, description="Total value for progress bar (if None, uses value as percentage)"
+    )
+    show_percentage: bool = Field(True, description="Show percentage for progress bar")
+    show_eta: bool = Field(
+        False, description="Show ETA for progress bar (always False for static metrics)"
+    )
+
+    # Sparkline specific options
+    sparkline_summary: str = Field(
+        "max", description="Summary function for sparkline (max, min, mean)"
+    )
+    sparkline_data_points: int = Field(
+        20, description="Number of historical data points to keep for sparkline"
     )
 
 

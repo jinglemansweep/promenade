@@ -1,0 +1,85 @@
+# Example dashboard showcasing different widget types
+# This example demonstrates text, digits, sparkline, and progress widgets
+
+title: "Widget Types Demo"
+refresh_interval: 2
+grid_rows: 3
+grid_columns: 3
+
+widgets:
+  # Text widget (default) - simple text display
+  - type: text
+    label: "CPU Usage (Text)"
+    query: 'sum(rate(node_cpu_seconds_total{mode!="idle"}[5m])) * 100'
+    format_string: "{value:.1f}%"
+    row: 0
+    column: 0
+    border_style: solid
+    conditional_formats:
+      - condition: "value > 80"
+        border_color: "$error"
+      - condition: "value > 50"
+        border_color: "yellow"
+
+  # Digits widget - large numeric display
+  - type: digits
+    label: "Active Requests"
+    query: 'sum(rate(http_requests_total[1m]))'
+    format_string: "{value:.0f}"
+    row: 0
+    column: 1
+    border_style: rounded
+    conditional_formats:
+      - condition: "value > 1000"
+        text_color: "red"
+
+  # Progress bar - percentage display
+  - type: progress
+    label: "Memory Usage %"
+    query: '(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100'
+    format_string: "{value:.1f}%"
+    progress_total: 100
+    show_percentage: true
+    row: 0
+    column: 2
+    border_style: solid
+
+  # Sparkline - time series visualization
+  - type: sparkline
+    label: "Request Rate Trend"
+    query: 'sum(rate(http_requests_total[1m]))'
+    sparkline_summary: "max"
+    sparkline_data_points: 30
+    row: 1
+    column: 0
+    column_span: 2
+    row_span: 2
+    border_style: double
+
+  # Progress bar with custom total
+  - type: progress
+    label: "Disk Usage (GB)"
+    query: 'node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}'
+    format_string: "{value:.2f}"
+    progress_total: 1000  # Assuming 1TB disk
+    show_percentage: false
+    row: 1
+    column: 2
+    border_style: solid
+    conditional_formats:
+      - condition: "value > 900"
+        border_color: "$error"
+
+  # Digits widget with conditional formatting
+  - type: digits
+    label: "Uptime (days)"
+    query: '(time() - node_boot_time_seconds) / 86400'
+    format_string: "{value:.1f}"
+    row: 2
+    column: 2
+    border_style: rounded
+    conditional_formats:
+      - condition: "value > 30"
+        text_color: "green"
+      - condition: "value < 1"
+        text_color: "red"

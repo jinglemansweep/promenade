@@ -103,6 +103,7 @@ widgets:
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
+| `type` | string | No | `text` | Widget type: `text`, `digits`, `sparkline`, `progress` |
 | `label` | string | No | - | Widget label/title |
 | `query` | string | Yes | - | PromQL query to execute |
 | `refresh_interval` | integer | No | 5 | Refresh interval in seconds |
@@ -111,8 +112,33 @@ widgets:
 | `column` | integer | Yes | - | Column position (0-indexed) |
 | `row_span` | integer | No | 1 | Number of rows to span |
 | `column_span` | integer | No | 1 | Number of columns to span |
-| `border_style` | string | No | `solid` | Border style: `none`, `solid`, `dashed`, `double`, `heavy`, `rounded` |
+| `border_style` | string | No | `heavy` | Border style: `none`, `solid`, `dashed`, `double`, `heavy`, `rounded` |
 | `conditional_formats` | array | No | [] | List of conditional formatting rules |
+
+#### Widget Types
+
+**`text`** (default) - Simple text display
+- Standard metric display with formatted text
+- Supports all conditional formatting options
+
+**`digits`** - Large numeric display
+- Shows metrics in large, prominent multi-line characters
+- Ideal for important metrics you want to stand out
+- Best for numeric values
+
+**`sparkline`** - Time series trend visualization
+- Displays historical metric values as a compact bar chart
+- Automatically updates with new data points
+- Additional options:
+  - `sparkline_summary`: Summary function (`max`, `min`, `mean`) - default: `max`
+  - `sparkline_data_points`: Number of historical points to keep - default: `20`
+
+**`progress`** - Progress bar display
+- Shows metrics as a progress bar with optional percentage
+- Additional options:
+  - `progress_total`: Total value for progress bar (if `None`, treats value as 0-100%) - default: `100`
+  - `show_percentage`: Display percentage - default: `true`
+  - `show_eta`: Display ETA (always `false` for static metrics) - default: `false`
 
 ### Conditional Formatting
 
@@ -121,9 +147,9 @@ Conditional formats are evaluated in order and applied when their condition is m
 ```yaml
 conditional_formats:
   - condition: "value > 80"           # Python expression with 'value' variable
-    border_color: "red"                # CSS color name or hex code
-    text_color: "red"
-    background_color: "#ff0000"
+    border_color: "$error"             # Theme color (recommended) or CSS color
+    text_color: "$error"               # Also accepts: "red", "#ff0000", etc.
+    background_color: "$surface"
     visible: true                      # Control widget visibility
 ```
 
@@ -133,9 +159,27 @@ conditional_formats:
 - Any valid Python expression with `value` variable
 
 **Color options:**
-- CSS color names: `red`, `green`, `blue`, `yellow`, etc.
-- Hex codes: `#ff0000`, `#00ff00`
-- Textual theme colors: `$primary`, `$secondary`, `$text`
+
+**Recommended: Use Textual theme colors** (automatically adapt to any theme):
+- `$success` - Success/positive states (green in dark, dark green in light)
+- `$error` - Error/negative states (red in dark, dark red in light)
+- `$warning` - Warning states (yellow/orange)
+- `$primary` - Primary theme color
+- `$secondary` - Secondary theme color
+- `$accent` - Accent color for highlights
+
+**Alternative: Standard colors** (automatically adjusted for theme):
+- CSS color names: `red`, `lime`, `blue`, `yellow`, etc.
+- Hex codes: `#ff0000`, `#00ff00`, `#ffaa00`
+- ANSI colors: `ansi_red`, `ansi_green`, `ansi_yellow`, `ansi_blue`
+- Rich color library: Over 140 named colors available (see [Textual color documentation](https://textual.textualize.io/api/color/))
+
+**Automatic Theme Adjustment:**
+- **Theme colors** (`$success`, `$error`, etc.): Automatically perfect for any theme - **Recommended!**
+- **Standard colors**: Automatically adjusted for visibility:
+  - Dark themes: Brightened by 30%
+  - Light themes: Darkened by 30-70% based on color brightness
+  - Ensures visibility across all themes
 
 ## Environment Variables
 
@@ -167,8 +211,8 @@ Options:
 
 See the `examples/` directory for sample configurations:
 
-- `simple.yaml` - Basic dashboard with 3 widgets
-- `dashboard.yaml` - Advanced dashboard with conditional formatting
+- `simple.yaml` - Basic dashboard with text widgets
+- `widget_types.yaml` - Demonstrates all widget types (text, digits, sparkline, progress)
 
 ### Example: System Monitoring Dashboard
 
