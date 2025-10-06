@@ -12,7 +12,9 @@ from promenade.prometheus import create_prometheus_client_from_env
 
 @click.command()  # type: ignore[misc]
 @click.argument(  # type: ignore[misc]
-    "config_file",
+    "config_files",
+    nargs=-1,
+    required=True,
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
 )
 @click.option(  # type: ignore[misc]
@@ -28,28 +30,28 @@ from promenade.prometheus import create_prometheus_client_from_env
     help="Textual theme to use (default: textual-dark)",
 )
 def main(
-    config_file: Path,
+    config_files: tuple[Path, ...],
     prometheus_url: str | None,
     theme: str,
 ) -> None:
-    """Launch the Prometheus dashboard with the specified configuration.
+    """Launch the Prometheus dashboard with the specified configuration(s).
 
-    CONFIG_FILE: Path to the YAML dashboard configuration file.
+    CONFIG_FILES: Path(s) to YAML dashboard configuration file(s). Multiple files create a carousel.
 
     Environment variables:
       PROMETHEUS_URL: Prometheus server URL (e.g., http://localhost:9090)
       PROMETHEUS_TIMEOUT: Request timeout in seconds (default: 10)
     """
     try:
-        # Load dashboard configuration
-        config = load_dashboard_config(config_file)
+        # Load all dashboard configurations
+        configs = [load_dashboard_config(config_file) for config_file in config_files]
 
         # Create Prometheus client
         prometheus_client = create_prometheus_client_from_env(prometheus_url)
 
         # Create and run the app
         app = PrometheusDashboard(
-            config=config,
+            configs=configs,
             prometheus_client=prometheus_client,
         )
 

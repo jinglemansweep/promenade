@@ -1,25 +1,25 @@
 """Main Textual application for the Prometheus dashboard."""
 
 from textual.app import App, ComposeResult
-from textual.containers import Grid
-from textual.widgets import Footer, Header
+from textual.containers import Grid, VerticalScroll
+from textual.widgets import Footer, Header, Static
 
 from promenade.prometheus import PrometheusClient
 from promenade.schema import DashboardConfig
 from promenade.widgets import MetricWidget
 
 
-class PrometheusDashboard(App):  # type: ignore[misc]
-    """A Textual app for displaying Prometheus metrics."""
+class DashboardView(VerticalScroll):  # type: ignore[misc]
+    """A view displaying a single dashboard configuration."""
 
     CSS = """
-    Screen {
-        layout: vertical;
+    DashboardView {
+        height: 1fr;
     }
 
     #dashboard-grid {
         width: 100%;
-        height: 1fr;
+        height: auto;
         grid-size: 1 1;  /* Will be set dynamically */
         grid-gutter: 1;
         padding: 1;
@@ -32,11 +32,6 @@ class PrometheusDashboard(App):  # type: ignore[misc]
     }
     """
 
-    BINDINGS = [
-        ("q", "quit", "Quit"),
-        ("r", "refresh", "Refresh"),
-    ]
-
     def __init__(
         self,
         config: DashboardConfig,
@@ -44,7 +39,7 @@ class PrometheusDashboard(App):  # type: ignore[misc]
         *args: object,
         **kwargs: object,
     ) -> None:
-        """Initialize the dashboard app.
+        """Initialize the dashboard view.
 
         Args:
             config: Dashboard configuration
@@ -55,15 +50,9 @@ class PrometheusDashboard(App):  # type: ignore[misc]
         super().__init__(*args, **kwargs)
         self.config = config
         self.prometheus_client = prometheus_client
-        self.title = config.title
-        self.sub_title = "Promenade"
 
     def compose(self) -> ComposeResult:
-        """Compose the app's widgets."""
-        from textual.widgets import Static
-
-        yield Header()
-
+        """Compose the view's widgets."""
         # Create a 2D grid to hold widgets
         # We'll use a placeholder-based approach
         grid_cells: list[list[MetricWidget | Static | str | None]] = [
@@ -102,17 +91,11 @@ class PrometheusDashboard(App):  # type: ignore[misc]
                         placeholder.styles.visibility = "hidden"
                         yield placeholder
 
-        yield Footer(show_command_palette=False)
-
     def on_mount(self) -> None:
-        """Configure grid and start refresh timer after mounting."""
+        """Configure grid after mounting."""
         grid = self.query_one("#dashboard-grid", Grid)
         grid.styles.grid_size_columns = self.config.grid_columns
         grid.styles.grid_size_rows = self.config.grid_rows
-
-        # Start the dashboard-level refresh
-        self.refresh_all_metrics()
-        self.set_interval(self.config.refresh_interval, self.refresh_all_metrics)
 
     def refresh_all_metrics(self) -> None:
         """Fetch all metrics from Prometheus in a batch and update widgets."""
@@ -128,9 +111,123 @@ class PrometheusDashboard(App):  # type: ignore[misc]
             value = results.get(query)
             widget_element.update_value(value)
 
-    def action_refresh_all(self) -> None:
-        """Manually refresh all metrics immediately."""
-        self.refresh_all_metrics()
+
+class PrometheusDashboard(App):  # type: ignore[misc]
+    """A Textual app for displaying Prometheus metrics with carousel navigation."""
+
+    CSS = """
+    Screen {
+        layout: vertical;
+    }
+    """
+
+    BINDINGS = [
+        ("q", "quit", "Quit"),
+        ("r", "refresh", "Refresh"),
+        ("left,n", "previous_screen", "Previous"),
+        ("right,m", "next_screen", "Next"),
+    ]
+
+    def __init__(
+        self,
+        configs: list[DashboardConfig],
+        prometheus_client: PrometheusClient,
+        *args: object,
+        **kwargs: object,
+    ) -> None:
+        """Initialize the dashboard app.
+
+        Args:
+            configs: List of dashboard configurations
+            prometheus_client: Prometheus client for queries
+            *args: Additional positional arguments
+            **kwargs: Additional keyword arguments
+        """
+        super().__init__(*args, **kwargs)
+        self.configs = configs
+        self.prometheus_client = prometheus_client
+        self.current_dashboard_index = 0
+        self.sub_title = "Promenade"
+        self.dashboard_views: list[DashboardView] = []
+        self._refresh_timer_id: int | None = None
+
+    def compose(self) -> ComposeResult:
+        """Compose the app's widgets."""
+        yield Header()
+
+        # Create all dashboard views
+        for config in self.configs:
+            view = DashboardView(
+                config=config,
+                prometheus_client=self.prometheus_client,
+            )
+            self.dashboard_views.append(view)
+            # Only yield the first one initially
+            if len(self.dashboard_views) == 1:
+                yield view
+
+        yield Footer(show_command_palette=False)
+
+    def on_mount(self) -> None:
+        """Start refresh timer after mounting."""
+        if self.configs:
+            self.title = self.configs[0].title
+            self._start_refresh_timer()
+
+    def _start_refresh_timer(self) -> None:
+        """Start or restart the refresh timer for current dashboard."""
+        # Note: Textual automatically handles timer cleanup, so we just create a new one
+        current_config = self.configs[self.current_dashboard_index]
+        self._refresh_timer_id = self.set_interval(
+            current_config.refresh_interval, self._refresh_current_dashboard
+        )
+        # Immediately refresh
+        self._refresh_current_dashboard()
+
+    def _refresh_current_dashboard(self) -> None:
+        """Refresh the currently visible dashboard."""
+        if self.dashboard_views:
+            self.dashboard_views[self.current_dashboard_index].refresh_all_metrics()
+
+    def action_refresh(self) -> None:
+        """Manually refresh all metrics on current dashboard."""
+        self._refresh_current_dashboard()
+
+    def _switch_dashboard(self, new_index: int) -> None:
+        """Switch to a different dashboard view."""
+        if new_index == self.current_dashboard_index or not self.dashboard_views:
+            return
+
+        # Get the container (the screen's children between Header and Footer)
+        old_view = self.dashboard_views[self.current_dashboard_index]
+        new_view = self.dashboard_views[new_index]
+
+        # Remove old view and add new view
+        old_view.remove()
+        self.mount(new_view, before=self.query_one(Footer))
+
+        # Update state
+        self.current_dashboard_index = new_index
+        self.title = self.configs[new_index].title
+
+        # Restart refresh timer for new dashboard
+        self._start_refresh_timer()
+
+    def action_next_screen(self) -> None:
+        """Switch to the next dashboard."""
+        if len(self.configs) <= 1:
+            return
+
+        new_index = (self.current_dashboard_index + 1) % len(self.configs)
+        self._switch_dashboard(new_index)
+
+    def action_previous_screen(self) -> None:
+        """Switch to the previous dashboard."""
+        if len(self.configs) <= 1:
+            return
+
+        new_index = (self.current_dashboard_index - 1) % len(self.configs)
+        self._switch_dashboard(new_index)
 
     def on_unmount(self) -> None:
         """Clean up when the app is closed."""
