@@ -54,7 +54,7 @@ widgets:
 
   - title: "WAN Download"
     subtitle: "Speed"
-    type: digits
+    type: sparkline
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_download"}
     format_string: "{value:.0f}Mbs"
     row: 0
@@ -69,7 +69,7 @@ widgets:
 
   - title: "WAN Upload"
     subtitle: "Speed"
-    type: digits
+    type: sparkline
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_upload"}
     format_string: "{value:.0f}Mbs"
     row: 0
@@ -84,7 +84,7 @@ widgets:
 
   - title: "NAS Volume"
     subtitle: "Used"
-    type: digits
+    type: sparkline
     query: homeassistant_sensor_unit_percent{entity="sensor.ds920plus_volume_used"}
     format_string: "{value:.0f}%"
     row: 0

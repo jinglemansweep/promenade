@@ -33,6 +33,11 @@ class MetricWidget(Container):  # type: ignore[misc]
         height: 1fr;
     }
 
+    MetricWidget > ProgressBar {
+        height: 1;
+        align: center middle;
+    }
+
     MetricWidget > .value-text {
         text-align: center;
         height: auto;
