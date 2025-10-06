@@ -10,9 +10,10 @@ widgets:
 
   # ROW 0
 
-  - label: "UDM SE"
+  - title: "UDM SE"
+    subtitle: "Ping"
     query: probe_success{instance="10.1.1.1"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 0
     column: 0
     row_span: 1
@@ -23,9 +24,10 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "Switch Rack"
+  - title: "Switch Rack"
+    subtitle: "Ping"
     query: probe_success{instance="10.1.1.11"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 0
     column: 1
     row_span: 1
@@ -36,9 +38,10 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "Switch Lounge"
+  - title: "Switch Lounge"
+    subtitle: "Ping"
     query: probe_success{instance="10.1.1.12"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 0
     column: 2
     row_span: 1
@@ -49,7 +52,8 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "WAN Download"
+  - title: "WAN Download"
+    subtitle: "Speed"
     type: digits
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_download"}
     format_string: "{value:.0f}Mbs"
@@ -63,7 +67,8 @@ widgets:
       - condition: "value < 500"
         border_color: "$error"
 
-  - label: "WAN Upload"
+  - title: "WAN Upload"
+    subtitle: "Speed"
     type: digits
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_upload"}
     format_string: "{value:.0f}Mbs"
@@ -77,7 +82,8 @@ widgets:
       - condition: "value < 500"
         border_color: "$error"
 
-  - label: "NAS Volume"
+  - title: "NAS Volume"
+    subtitle: "Used"
     type: digits
     query: homeassistant_sensor_unit_percent{entity="sensor.ds920plus_volume_used"}
     format_string: "{value:.0f}%"
@@ -93,9 +99,10 @@ widgets:
 
   # ROW 1
 
-  - label: "DS920+"
+  - title: "DS920+"
+    subtitle: "Ping"
     query: probe_success{instance="ds920p.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 1
     column: 0
     row_span: 1
@@ -106,9 +113,10 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "PVM1"
+  - title: "PVM1"
+    subtitle: "Ping"
     query: probe_success{instance="pvm1.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 1
     column: 1
     row_span: 1
@@ -119,9 +127,10 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "PVM2"
+  - title: "PVM2"
+    subtitle: "Ping"
     query: probe_success{instance="pvm2.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 1
     column: 2
     row_span: 1
@@ -132,9 +141,10 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "PVM3"
+  - title: "PVM3"
+    subtitle: "Ping"
     query: probe_success{instance="pvm3.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 1
     column: 3
     row_span: 1
@@ -145,9 +155,10 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "Jetson"
+  - title: "Jetson"
+    subtitle: "Ping"
     query: probe_success{instance="jetson.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 1
     column: 4
     row_span: 1
@@ -158,11 +169,12 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "Dev"
+  - title: "Dev"
+    subtitle: "Ping"
     query: probe_success{instance="dev.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 1
-    column: 5 
+    column: 5
     row_span: 1
     column_span: 1
     conditional_formats:
@@ -173,9 +185,10 @@ widgets:
 
   # ROW 2
 
-  - label: "Decks"
+  - title: "Decks"
+    subtitle: "Ping"
     query: probe_success{instance="decks.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 2
     column: 0
     row_span: 1
@@ -186,9 +199,10 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "WideBoy"
+  - title: "WideBoy"
+    subtitle: "Ping"
     query: probe_success{instance="wideboy.adm.ptre.es"}
-    format_string: "'ICMP OK' if value else 'ICMP FAIL'"
+    format_string: "'UP' if value else 'DOWN'"
     row: 2
     column: 1
     row_span: 1
@@ -203,7 +217,8 @@ widgets:
 
   # ROW 4
 
-  - label: "Home Assistant"
+  - title: "Home Assistant"
+    subtitle: "HTTP"
     query: probe_success{instance="http://hass.adm.ptre.es:8123"}
     format_string: "'HTTP OK' if value else 'HTTP FAIL {value}'"
     row: 4
@@ -216,7 +231,8 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "Plex"
+  - title: "Plex"
+    subtitle: "HTTP"
     query: probe_success{instance="http://plex.adm.ptre.es:32400"}
     format_string: "'HTTP OK' if value else 'HTTP FAIL'"
     row: 4
@@ -229,7 +245,8 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - label: "DW1 Load Avg"
+  - title: "DW1 Load Avg"
+    subtitle: "Load"
     type: sparkline
     query: node_load1{instance="dw1.svc.ptre.es:9100"}
     format_string: "{value:.2f}"
@@ -244,7 +261,8 @@ widgets:
       - condition: "value <= 1"
         border_color: "$success"
 
-  - label: "DW1 RAM Free"
+  - title: "DW1 RAM Free"
+    subtitle: "RAM"
     type: sparkline
     query: node_memory_MemFree_bytes{instance="dw1.svc.ptre.es:9100"} / 1e+9
     format_string: "{value:.2f}"

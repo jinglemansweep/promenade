@@ -17,6 +17,8 @@ class MetricWidget(Container):  # type: ignore[misc]
     DEFAULT_CSS = """
     MetricWidget {
         border: heavy $secondary;
+        border-title-color: $text;
+        border-subtitle-color: $primary;
         height: auto;
         padding: 0 1;
     }
@@ -62,7 +64,9 @@ class MetricWidget(Container):  # type: ignore[misc]
         self._sparkline_data: deque[float] = deque(maxlen=config.sparkline_data_points)
 
         # Set border style
-        self.border_title = config.label or ""
+        self.border_title = config.title or ""
+        if config.subtitle:
+            self.border_subtitle = f"[right]{config.subtitle}[/right]"
         if config.border_style.value != "none":
             self.border = config.border_style.value
 

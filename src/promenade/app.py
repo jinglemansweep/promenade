@@ -34,7 +34,7 @@ class PrometheusDashboard(App):  # type: ignore[misc]
 
     BINDINGS = [
         ("q", "quit", "Quit"),
-        ("r", "refresh_all", "Refresh All"),
+        ("r", "refresh", "Refresh"),
     ]
 
     def __init__(
@@ -102,7 +102,7 @@ class PrometheusDashboard(App):  # type: ignore[misc]
                         placeholder.styles.visibility = "hidden"
                         yield placeholder
 
-        yield Footer()
+        yield Footer(show_command_palette=False)
 
     def on_mount(self) -> None:
         """Configure grid and start refresh timer after mounting."""

@@ -56,7 +56,10 @@ class WidgetConfig(BaseModel):
     type: WidgetType = Field(
         WidgetType.TEXT, description="Widget type (text, digits, sparkline, progress)"
     )
-    label: str | None = Field(None, description="Optional label for the widget")
+    title: str | None = Field(None, description="Optional title for the widget")
+    subtitle: str | None = Field(
+        None, description="Optional subtitle to display in bottom-right of border"
+    )
     query: str = Field(..., description="Prometheus query to execute")
     format_string: str = Field("{value}", description="Format string for displaying the value")
     row: int = Field(..., description="Row position in grid (0-indexed)", ge=0)
