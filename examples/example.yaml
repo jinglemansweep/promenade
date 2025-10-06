@@ -3,7 +3,7 @@
 
 title: "Home Lab"
 refresh_interval: 30  # Refresh all metrics every 10 seconds
-grid_rows: 8
+grid_rows: 7
 grid_columns: 6
 
 widgets:
@@ -175,10 +175,10 @@ widgets:
       - condition: "value == 0 or value > 10"
         border_color: "$error"
 
-  - title: "DS920+"
+  - title: "DM1"
     subtitle: "Ping"
     type: sparkline
-    query: probe_icmp_duration_seconds{instance="ds920p.adm.ptre.es",phase="rtt"}*1000
+    query: probe_icmp_duration_seconds{instance="dm1.svc.ptre.es",phase="rtt"}*1000
     format_string: "{value:.2f}ms"
     row: 2
     column: 0
@@ -190,10 +190,10 @@ widgets:
       - condition: "value == 0 or value > 10"
         border_color: "$error"
 
-  - title: "Jetson"
+  - title: "DM2"
     subtitle: "Ping"
     type: sparkline
-    query: probe_icmp_duration_seconds{instance="jetson.adm.ptre.es",phase="rtt"}*1000
+    query: probe_icmp_duration_seconds{instance="dm2.svc.ptre.es",phase="rtt"}*1000
     format_string: "{value:.2f}ms"
     row: 2
     column: 1
@@ -220,11 +220,10 @@ widgets:
       - condition: "value == 0 or value > 10"
         border_color: "$error"
 
-
-  - title: "Hue Hub"
+  - title: "DW1"
     subtitle: "Ping"
     type: sparkline
-    query: probe_icmp_duration_seconds{instance="huehub.adm.ptre.es",phase="rtt"}*1000
+    query: probe_icmp_duration_seconds{instance="dw1.svc.ptre.es",phase="rtt"}*1000
     format_string: "{value:.2f}ms"
     row: 3
     column: 0
@@ -236,10 +235,10 @@ widgets:
       - condition: "value == 0 or value > 10"
         border_color: "$error"
 
-  - title: "WideBoy"
+  - title: "DW2"
     subtitle: "Ping"
     type: sparkline
-    query: probe_icmp_duration_seconds{instance="wideboy.adm.ptre.es",phase="rtt"}*1000
+    query: probe_icmp_duration_seconds{instance="dw2.svc.ptre.es",phase="rtt"}*1000
     format_string: "{value:.2f}ms"
     row: 3
     column: 1
@@ -251,10 +250,10 @@ widgets:
       - condition: "value == 0 or value > 10"
         border_color: "$error"
 
-  - title: "Shield"
+  - title: "DW3"
     subtitle: "Ping"
     type: sparkline
-    query: probe_icmp_duration_seconds{instance="shield.adm.ptre.es",phase="rtt"}*1000
+    query: probe_icmp_duration_seconds{instance="dw3.svc.ptre.es",phase="rtt"}*1000
     format_string: "{value:.2f}ms"
     row: 3
     column: 2
@@ -266,10 +265,10 @@ widgets:
       - condition: "value == 0 or value > 10"
         border_color: "$error"
 
-  - title: "Vuduo"
+  - title: "DS920+"
     subtitle: "Ping"
     type: sparkline
-    query: probe_icmp_duration_seconds{instance="vuduo.adm.ptre.es",phase="rtt"}*1000
+    query: probe_icmp_duration_seconds{instance="ds920p.adm.ptre.es",phase="rtt"}*1000
     format_string: "{value:.2f}ms"
     row: 4
     column: 0
@@ -281,13 +280,28 @@ widgets:
       - condition: "value == 0 or value > 10"
         border_color: "$error"
 
-  - title: "Decks"
+  - title: "Jetson"
     subtitle: "Ping"
     type: sparkline
-    query: probe_icmp_duration_seconds{instance="decks.adm.ptre.es",phase="rtt"}*1000
+    query: probe_icmp_duration_seconds{instance="jetson.adm.ptre.es",phase="rtt"}*1000
     format_string: "{value:.2f}ms"
     row: 4
     column: 1
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value <= 10"
+        border_color: "$success"
+      - condition: "value == 0 or value > 10"
+        border_color: "$error"
+
+  - title: "Hue Hub"
+    subtitle: "Ping"
+    type: sparkline
+    query: probe_icmp_duration_seconds{instance="huehub.adm.ptre.es",phase="rtt"}*1000
+    format_string: "{value:.2f}ms"
+    row: 4
+    column: 2
     row_span: 1
     column_span: 1
     conditional_formats:
