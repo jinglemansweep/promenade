@@ -3,12 +3,12 @@
 
 title: "Home Lab"
 refresh_interval: 30  # Refresh all metrics every 10 seconds
-grid_rows: 6
+grid_rows: 8
 grid_columns: 6
 
 widgets:
 
-  # ROW 0
+  # ROW 0-2
 
   - title: "UDM SE"
     subtitle: "Ping"
@@ -58,8 +58,8 @@ widgets:
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_download"}
     format_string: "{value:.0f}Mbs"
     row: 0
-    column: 3
-    row_span: 1
+    column: 4
+    row_span: 2
     column_span: 1
     conditional_formats:
       - condition: "value >= 500"
@@ -73,8 +73,8 @@ widgets:
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_upload"}
     format_string: "{value:.0f}Mbs"
     row: 0
-    column: 4
-    row_span: 1
+    column: 5
+    row_span: 2
     column_span: 1
     conditional_formats:
       - condition: "value >= 500"
@@ -87,9 +87,9 @@ widgets:
     type: sparkline
     query: homeassistant_sensor_unit_percent{entity="sensor.ds920plus_volume_used"}
     format_string: "{value:.0f}%"
-    row: 0
-    column: 5
-    row_span: 1
+    row: 2
+    column: 4
+    row_span: 2
     column_span: 1
     conditional_formats:
       - condition: "value <= 80"
@@ -97,28 +97,12 @@ widgets:
       - condition: "value > 80"
         border_color: "$error"
 
-  # ROW 1
-
-  - title: "DS920+"
-    subtitle: "Ping"
-    query: probe_success{instance="ds920p.adm.ptre.es"}
-    format_string: "'UP' if value else 'DOWN'"
-    row: 1
-    column: 0
-    row_span: 1
-    column_span: 1
-    conditional_formats:
-      - condition: "value == 1"
-        border_color: "$success"
-      - condition: "value == 0"
-        border_color: "$error"
-
   - title: "PVM1"
     subtitle: "Ping"
     query: probe_success{instance="pvm1.adm.ptre.es"}
     format_string: "'UP' if value else 'DOWN'"
     row: 1
-    column: 1
+    column: 0
     row_span: 1
     column_span: 1
     conditional_formats:
@@ -132,7 +116,7 @@ widgets:
     query: probe_success{instance="pvm2.adm.ptre.es"}
     format_string: "'UP' if value else 'DOWN'"
     row: 1
-    column: 2
+    column: 1
     row_span: 1
     column_span: 1
     conditional_formats:
@@ -146,7 +130,21 @@ widgets:
     query: probe_success{instance="pvm3.adm.ptre.es"}
     format_string: "'UP' if value else 'DOWN'"
     row: 1
-    column: 3
+    column: 2
+    row_span: 1
+    column_span: 1
+    conditional_formats:
+      - condition: "value == 1"
+        border_color: "$success"
+      - condition: "value == 0"
+        border_color: "$error"
+
+  - title: "DS920+"
+    subtitle: "Ping"
+    query: probe_success{instance="ds920p.adm.ptre.es"}
+    format_string: "'UP' if value else 'DOWN'"
+    row: 2
+    column: 0
     row_span: 1
     column_span: 1
     conditional_formats:
@@ -159,8 +157,8 @@ widgets:
     subtitle: "Ping"
     query: probe_success{instance="jetson.adm.ptre.es"}
     format_string: "'UP' if value else 'DOWN'"
-    row: 1
-    column: 4
+    row: 2
+    column: 1
     row_span: 1
     column_span: 1
     conditional_formats:
@@ -173,8 +171,8 @@ widgets:
     subtitle: "Ping"
     query: probe_success{instance="dev.adm.ptre.es"}
     format_string: "'UP' if value else 'DOWN'"
-    row: 1
-    column: 5
+    row: 2
+    column: 2
     row_span: 1
     column_span: 1
     conditional_formats:
@@ -183,13 +181,12 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  # ROW 2
 
   - title: "Decks"
     subtitle: "Ping"
     query: probe_success{instance="decks.adm.ptre.es"}
     format_string: "'UP' if value else 'DOWN'"
-    row: 2
+    row: 3
     column: 0
     row_span: 1
     column_span: 1
@@ -213,15 +210,11 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  # ROW 3
-
-  # ROW 4
-
   - title: "Home Assistant"
     subtitle: "HTTP"
     query: probe_success{instance="http://hass.adm.ptre.es:8123"}
     format_string: "'HTTP OK' if value else 'HTTP FAIL {value}'"
-    row: 4
+    row: 5
     column: 0
     row_span: 1
     column_span: 1
@@ -235,7 +228,7 @@ widgets:
     subtitle: "HTTP"
     query: probe_success{instance="http://plex.adm.ptre.es:32400"}
     format_string: "'HTTP OK' if value else 'HTTP FAIL'"
-    row: 4
+    row: 5
     column: 1
     row_span: 1
     column_span: 1
@@ -245,13 +238,13 @@ widgets:
       - condition: "value == 0"
         border_color: "$error"
 
-  - title: "DW1 Load Avg"
+  - title: "DW1 1m Avg"
     subtitle: "Load"
     type: sparkline
     query: node_load1{instance="dw1.svc.ptre.es:9100"}
     format_string: "{value:.2f}"
     sparkline_summary: mean
-    row: 4
+    row: 5
     column: 4
     row_span: 1
     column_span: 1
@@ -261,13 +254,13 @@ widgets:
       - condition: "value <= 1"
         border_color: "$success"
 
-  - title: "DW1 RAM Free"
-    subtitle: "RAM"
+  - title: "DW1 Memory"
+    subtitle: "Free"
     type: sparkline
     query: node_memory_MemFree_bytes{instance="dw1.svc.ptre.es:9100"} / 1e+9
     format_string: "{value:.2f}"
     sparkline_summary: mean
-    row: 4
+    row: 5
     column: 5
     row_span: 1
     column_span: 1
