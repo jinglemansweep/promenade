@@ -8,8 +8,8 @@ grid_columns: 6
 
 widgets:
 
-  - title: "WAN Download"
-    subtitle: "Speed"
+  - title: "WAN"
+    subtitle: "Download"
     type: sparkline
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_download"}
     format_string: "{value:.0f}Mbs"
@@ -23,8 +23,8 @@ widgets:
       - condition: "value < 500"
         border_color: "$error"
 
-  - title: "WAN Upload"
-    subtitle: "Speed"
+  - title: "WAN"
+    subtitle: "Upload"
     type: sparkline
     query: homeassistant_sensor_data_rate_mbit_per_s{entity="sensor.speedtest_upload"}
     format_string: "{value:.0f}Mbs"
@@ -38,7 +38,7 @@ widgets:
       - condition: "value < 500"
         border_color: "$error"
 
-  - title: "NAS Volume"
+  - title: "NAS"
     subtitle: "Used"
     type: sparkline
     query: homeassistant_sensor_unit_percent{entity="sensor.ds920plus_volume_used"}
@@ -53,7 +53,7 @@ widgets:
       - condition: "value > 80"
         border_color: "$error"
 
-  - title: "NAS Temp"
+  - title: "NAS"
     subtitle: "Temperature"
     type: sparkline
     query: homeassistant_sensor_temperature_celsius{entity="sensor.ds920plus_temperature"}
@@ -68,7 +68,7 @@ widgets:
       - condition: "value > 50"
         border_color: "$error"
 
-  - title: "Rack Temp"
+  - title: "Rack"
     subtitle: "Temperature"
     type: sparkline
     query: homeassistant_sensor_temperature_celsius{entity="sensor.rack_temperature_sensor_temperature"}
@@ -97,7 +97,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "Switch Rack"
@@ -112,7 +112,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "Switch Lounge"
@@ -127,7 +127,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "PVM1"
@@ -142,7 +142,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "PVM2"
@@ -157,7 +157,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "PVM3"
@@ -172,7 +172,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "DS920+"
@@ -187,7 +187,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "Jetson"
@@ -202,7 +202,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "Dev"
@@ -217,7 +217,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
 
@@ -233,7 +233,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "WideBoy"
@@ -248,7 +248,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "Shield"
@@ -263,7 +263,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "Vuduo"
@@ -278,7 +278,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "Decks"
@@ -293,7 +293,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 10"
         border_color: "$success"
-      - condition: "value > 10"
+      - condition: "value == 0 or value > 10"
         border_color: "$error"
 
   - title: "IPNet VPS"
@@ -308,7 +308,7 @@ widgets:
     conditional_formats:
       - condition: "value <= 30"
         border_color: "$success"
-      - condition: "value > 30"
+      - condition: "value == 0 or value > 30"
         border_color: "$error"
 
   # HTTP
