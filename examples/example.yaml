@@ -3,7 +3,7 @@
 
 title: "Home Lab"
 refresh_interval: 30  # Refresh all metrics every 10 seconds
-grid_rows: 5
+grid_rows: 6
 grid_columns: 6
 
 widgets:

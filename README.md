@@ -8,11 +8,13 @@ A powerful, customizable CLI dashboard for Prometheus metrics built with Python 
 
 - 📊 **Grid-based Layout**: Flexible grid system for organizing widgets
 - 🎨 **Conditional Formatting**: Dynamic styling based on metric values
-- 🔄 **Auto-refresh**: Configurable refresh intervals per widget
+- 🔄 **Auto-refresh**: Configurable refresh intervals per dashboard
 - 🎯 **Custom Queries**: Full PromQL support
+- 🎠 **Multi-Dashboard Carousel**: Navigate between multiple dashboards with keyboard shortcuts
 - 🌈 **Theme Support**: Respects Textual themes
 - ⚡ **Fast & Lightweight**: Built on Textual framework
 - 📝 **YAML Configuration**: Simple, declarative dashboard definitions
+- 🏷️ **Widget Titles & Subtitles**: Customizable border titles and subtitles
 
 ## Requirements
 
@@ -63,17 +65,20 @@ pre-commit install
 
 1. **Start your Prometheus server** (if not already running)
 
-2. **Create a dashboard configuration** (see `examples/simple.yaml`)
+2. **Create a dashboard configuration** (see `examples/example.yaml`)
 
 3. **Run the dashboard**:
 
 ```bash
 # Using environment variable
 export PROMETHEUS_URL=http://localhost:9090
-promenade examples/simple.yaml
+promenade examples/example.yaml
 
 # Or using command-line argument
-promenade examples/simple.yaml --prometheus-url http://localhost:9090
+promenade examples/example.yaml --prometheus-url http://localhost:9090
+
+# Multiple dashboards (carousel mode)
+promenade dashboard1.yaml dashboard2.yaml dashboard3.yaml
 ```
 
 ## Configuration
@@ -82,13 +87,14 @@ promenade examples/simple.yaml --prometheus-url http://localhost:9090
 
 ```yaml
 title: "My Dashboard"
-grid_rows: 3        # Number of rows in the grid
-grid_columns: 3     # Number of columns in the grid
+refresh_interval: 30  # Refresh all widgets every 30 seconds
+grid_rows: 3          # Number of rows in the grid
+grid_columns: 3       # Number of columns in the grid
 
 widgets:
-  - label: "CPU Usage"                    # Optional widget label
+  - title: "CPU Usage"                    # Optional widget title (top border)
+    subtitle: "System"                    # Optional subtitle (bottom-right border)
     query: "100 - (avg(rate(...)) * 100)" # PromQL query
-    refresh_interval: 5                    # Refresh every 5 seconds
     format_string: "{value:.1f}%"         # Python format string
     row: 0                                 # Grid position (0-indexed)
     column: 0
@@ -106,15 +112,15 @@ widgets:
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `type` | string | No | `text` | Widget type: `text`, `digits`, `sparkline`, `progress` |
-| `label` | string | No | - | Widget label/title |
+| `title` | string | No | - | Widget title displayed in top border |
+| `subtitle` | string | No | - | Subtitle displayed in bottom-right border |
 | `query` | string | Yes | - | PromQL query to execute |
-| `refresh_interval` | integer | No | 5 | Refresh interval in seconds |
 | `format_string` | string | No | `{value}` | Python format string for display |
 | `row` | integer | Yes | - | Row position (0-indexed) |
 | `column` | integer | Yes | - | Column position (0-indexed) |
 | `row_span` | integer | No | 1 | Number of rows to span |
 | `column_span` | integer | No | 1 | Number of columns to span |
-| `border_style` | string | No | `heavy` | Border style: `none`, `solid`, `dashed`, `double`, `heavy`, `rounded` |
+| `border_style` | string | No | `solid` | Border style: `none`, `solid`, `dashed`, `double`, `heavy`, `rounded` |
 | `conditional_formats` | array | No | [] | List of conditional formatting rules |
 
 #### Widget Types
@@ -193,10 +199,11 @@ conditional_formats:
 ## CLI Usage
 
 ```bash
-promenade [OPTIONS] CONFIG_FILE
+promenade [OPTIONS] CONFIG_FILES...
 
 Arguments:
-  CONFIG_FILE  Path to YAML dashboard configuration
+  CONFIG_FILES  Path(s) to YAML dashboard configuration file(s)
+                Multiple files create a carousel of dashboards
 
 Options:
   -u, --prometheus-url TEXT  Prometheus server URL
@@ -207,47 +214,50 @@ Options:
 ### Keyboard Shortcuts
 
 - `q` - Quit the application
-- `r` - Refresh all metrics immediately
+- `r` - Refresh all metrics on current dashboard immediately
+- `←` or `n` - Previous dashboard (in carousel mode)
+- `→` or `m` - Next dashboard (in carousel mode)
 
 ## Examples
 
 See the `examples/` directory for sample configurations:
 
-- `simple.yaml` - Basic dashboard with text widgets
+- `example.yaml` - Full-featured home lab monitoring dashboard
 - `widget_types.yaml` - Demonstrates all widget types (text, digits, sparkline, progress)
 
 ### Example: System Monitoring Dashboard
 
 ```yaml
 title: "System Monitor"
+refresh_interval: 5
 grid_rows: 2
 grid_columns: 2
 
 widgets:
-  - label: "CPU %"
+  - title: "CPU Usage"
+    subtitle: "System"
     query: "100 - (avg(rate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)"
-    refresh_interval: 5
     format_string: "{value:.1f}%"
     row: 0
     column: 0
     conditional_formats:
       - condition: "value > 80"
-        border_color: "red"
-        text_color: "red"
+        border_color: "$error"
+        text_color: "$error"
 
-  - label: "Memory %"
+  - title: "Memory Usage"
+    subtitle: "System"
     query: "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100"
-    refresh_interval: 5
     format_string: "{value:.1f}%"
     row: 0
     column: 1
     conditional_formats:
       - condition: "value > 90"
-        border_color: "red"
+        border_color: "$error"
 
-  - label: "Active Connections"
+  - title: "Active Connections"
+    subtitle: "Nginx"
     query: "sum(nginx_connections_active)"
-    refresh_interval: 3
     format_string: "{value:.0f}"
     row: 1
     column: 0

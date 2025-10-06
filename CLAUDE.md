@@ -16,6 +16,12 @@ Promenade is a powerful, customizable CLI dashboard for Prometheus metrics built
 - **Requests**: HTTP client for Prometheus API
 - **UV**: Fast Python package installer and resolver (recommended)
 
+## Rules
+
+* Refer to Textual documentation for UI components and layout.
+* Activate virtual environment at all times when working on the project.
+* Run `pre-commit run --all-files` before committing code, not at any other time.
+
 ## Project Structure
 
 ```
@@ -142,35 +148,58 @@ uv run pre-commit run
 
 ### 3. Textual Application (`app.py`, `widgets.py`)
 
-- `PrometheusDashboard`: Main Textual app
-- Custom widgets for metric display
+- `PrometheusDashboard`: Main Textual app with multi-dashboard carousel support
+- `DashboardView`: Container for individual dashboard layouts
+- `MetricWidget`: Custom widget for displaying Prometheus metrics
 - Grid-based layout system
-- Auto-refresh mechanism with configurable intervals
+- Auto-refresh mechanism with per-dashboard configurable intervals
+- Widget features:
+  - Customizable border titles and subtitles
+  - Conditional formatting (colors, visibility)
+  - Multiple widget types (text, digits, sparkline, progress)
 - Keyboard shortcuts:
   - `q`: Quit
-  - `r`: Refresh all metrics
+  - `r`: Refresh current dashboard
+  - `←` or `n`: Previous dashboard
+  - `→` or `m`: Next dashboard
 
 ### 4. CLI Interface (`cli.py`)
 
 - Uses Click for command-line parsing
-- Accepts config file path as argument
+- Accepts multiple config file paths for carousel mode
 - Options for Prometheus URL and theme selection
+- Supports single or multiple dashboard configurations
 
 ## Common Development Tasks
 
 ### Adding a New Widget Type
 
-1. Define widget class in `widgets.py` (inherit from Textual's `Widget` or `Static`)
-2. Add configuration fields to `WidgetConfig` in `schema.py`
-3. Update widget rendering logic in `app.py`
-4. Update README documentation
+1. Update the `WidgetType` enum in `schema.py`
+2. Add any type-specific configuration fields to `WidgetConfig` in `schema.py`
+3. Update widget rendering logic in `MetricWidget.compose()` in `widgets.py`
+4. Add update logic in `MetricWidget.update_value()` in `widgets.py`
+5. Update README documentation with examples
 
 ### Adding Configuration Options
 
 1. Add fields to appropriate Pydantic model in `schema.py`
-2. Update YAML loading in `config.py` if needed
+   - `DashboardConfig` for dashboard-level settings
+   - `WidgetConfig` for widget-level settings
+   - `ConditionalFormat` for formatting rules
+2. Update YAML loading in `config.py` if needed (usually automatic with Pydantic)
 3. Update widget/app logic to use new options
 4. Add examples to `examples/` directory
+5. Update README documentation
+
+### Working with Multiple Dashboards
+
+The app supports carousel navigation between multiple dashboards:
+
+1. Each dashboard is loaded from a separate YAML file
+2. `DashboardView` instances are created for each configuration
+3. Only one view is mounted at a time (dynamically swapped)
+4. Each dashboard maintains its own refresh interval
+5. Navigation updates the app title to match the current dashboard
 5. Document in README.md
 
 ### Modifying Prometheus Integration
@@ -280,10 +309,10 @@ uv sync
 ## Current Limitations & Future Work
 
 - No automated tests yet (pytest infrastructure in place)
-- Limited widget types (currently only metric display)
 - No persistent storage of dashboard state
-- Single dashboard per instance
 - No authentication for Prometheus connection
+- Refresh timers from all dashboards continue running (lightweight, but could be optimized)
+- No dashboard-level transitions/animations
 
 ## Resources
 
